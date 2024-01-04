@@ -8,22 +8,23 @@ defmodule Sistema do
   2. Listar
   3. Atualizar
   4. Excluir
-  5. Sair
+  5. Translação
+  6. Sair
 
   Entre com sua opção: "
 
   def criar(lista) do
     IO.puts("Criar")
-    coordenadas = IO.gets("Digite os pares de coordenadas x e y: ") |>
-    String.trim() |>
-    String.split() |>
-    Enum.map(&String.to_integer/1) |>
-    Enum.chunk_every(2, 2, :discard)
+    coordenadas =
+      IO.gets("Digite os pares de coordenadas x e y: ")
+      |> String.trim()
+      |> String.split(" ")
+      |> Enum.chunk_every(2)
+      |> Enum.map(fn [x, y] -> [String.to_integer(x), String.to_integer(y)] end)
 
     IO.puts("Coordenadas criadas com sucesso.")
+    IO.inspect(coordenadas)
 
-    IO.puts("Método criar")
-    IO.inspect(coordenadas ++ lista)
     coordenadas ++ lista
   end
 
@@ -71,6 +72,16 @@ defmodule Sistema do
     lista
   end
 
+  def translacao(lista) do
+    IO.puts("Translação do Polígono")
+    translacao_x = IO.gets("Digite a quantidade de translação para x: ") |> String.trim() |> String.to_integer()
+    translacao_y = IO.gets("Digite a quantidade de translação para y: ") |> String.trim() |> String.to_integer()
+
+    nova_lista = Enum.map(lista, fn [x, y] -> [x + translacao_x, y + translacao_y] end)
+
+    nova_lista
+  end
+
   def principal(lista) do
     op = IO.gets(@menu)
     |> String.trim()
@@ -81,7 +92,8 @@ defmodule Sistema do
       2 -> principal(listar(lista))
       3 -> principal(alterar(lista))
       4 -> principal(excluir(lista))
-      5 -> IO.puts("Até logo")
+      5 -> principal(translacao(lista))
+      6 -> IO.puts("Até logo")
       _ -> IO.puts("Opção inválida")
           principal(lista)
     end
