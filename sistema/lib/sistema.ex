@@ -9,7 +9,8 @@ defmodule Sistema do
   3. Atualizar
   4. Excluir
   5. Translação
-  6. Sair
+  6. Reflexão
+  7. Sair
 
   Entre com sua opção: "
 
@@ -82,10 +83,34 @@ defmodule Sistema do
     nova_lista
   end
 
+  def reflexao(lista) do
+    IO.puts("Reflexão do Polígono")
+    IO.puts("Digite o eixo de reflexão:")
+    IO.puts("1. Reflexão em relação ao eixo x")
+    IO.puts("2. Reflexão em relação ao eixo y")
+
+    opcao = IO.gets(" |> ") |> String.trim() |> String.to_integer()
+
+    case opcao do
+      1 ->
+        nova_lista = Enum.map(lista, fn [x, y] -> [x, -y] end)
+        nova_lista
+
+      2 ->
+        nova_lista = Enum.map(lista, fn [x, y] -> [-x, y] end)
+        nova_lista
+
+      _ ->
+        IO.puts("Opção inválida.")
+        lista
+    end
+  end
+
   def principal(lista) do
     op = IO.gets(@menu)
     |> String.trim()
     |> String.to_integer()
+    IO.puts("")
 
     case op do
       1 -> principal(criar(lista))
@@ -93,7 +118,8 @@ defmodule Sistema do
       3 -> principal(alterar(lista))
       4 -> principal(excluir(lista))
       5 -> principal(translacao(lista))
-      6 -> IO.puts("Até logo")
+      6 -> principal(reflexao(lista))
+      7 -> IO.puts("Até logo")
       _ -> IO.puts("Opção inválida")
           principal(lista)
     end
