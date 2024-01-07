@@ -8,9 +8,7 @@ defmodule Sistema do
   2. Listar
   3. Atualizar
   4. Excluir
-  5. Translação
-  6. Reflexão
-  7. Sair
+  5. Sair
 
   Entre com sua opção: "
 
@@ -73,39 +71,6 @@ defmodule Sistema do
     lista
   end
 
-  def translacao(lista) do
-    IO.puts("Translação do Polígono")
-    translacao_x = IO.gets("Digite a quantidade de translação para x: ") |> String.trim() |> String.to_integer()
-    translacao_y = IO.gets("Digite a quantidade de translação para y: ") |> String.trim() |> String.to_integer()
-
-    nova_lista = Enum.map(lista, fn [x, y] -> [x + translacao_x, y + translacao_y] end)
-
-    nova_lista
-  end
-
-  def reflexao(lista) do
-    IO.puts("Reflexão do Polígono")
-    IO.puts("Digite o eixo de reflexão:")
-    IO.puts("1. Reflexão em relação ao eixo x")
-    IO.puts("2. Reflexão em relação ao eixo y")
-
-    opcao = IO.gets(" |> ") |> String.trim() |> String.to_integer()
-
-    case opcao do
-      1 ->
-        nova_lista = Enum.map(lista, fn [x, y] -> [x, -y] end)
-        nova_lista
-
-      2 ->
-        nova_lista = Enum.map(lista, fn [x, y] -> [-x, y] end)
-        nova_lista
-
-      _ ->
-        IO.puts("Opção inválida.")
-        lista
-    end
-  end
-
   def principal(lista) do
     op = IO.gets(@menu)
     |> String.trim()
@@ -117,9 +82,7 @@ defmodule Sistema do
       2 -> principal(listar(lista))
       3 -> principal(alterar(lista))
       4 -> principal(excluir(lista))
-      5 -> principal(translacao(lista))
-      6 -> principal(reflexao(lista))
-      7 -> IO.puts("Até logo")
+      5 -> IO.puts("Até logo")
       _ -> IO.puts("Opção inválida")
           principal(lista)
     end
