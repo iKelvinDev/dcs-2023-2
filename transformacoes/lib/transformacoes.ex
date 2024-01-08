@@ -13,6 +13,10 @@ defmodule Transformacoes do
 
   Entre com sua opção: "
 
+  defp copiar_lista(lista) do
+    Enum.map(lista, &(&1))
+  end
+
   def criar(lista) do
     IO.puts("Criar")
     coordenadas =
@@ -26,7 +30,7 @@ defmodule Transformacoes do
     IO.puts("Vértices:")
     IO.inspect(coordenadas ++ lista)
 
-    coordenadas ++ lista
+    coordenadas ++ copiar_lista(lista)
   end
 
   def ponto_rotacao([x, y], angulo) do
@@ -40,11 +44,11 @@ defmodule Transformacoes do
     IO.inspect(lista)
     angulo = IO.gets("Digite o ângulo em graus:") |> String.trim() |> String.to_integer()
     angulo_em_radianos = angulo * :math.pi / 180
-    vertices_rotacionados = Enum.map(lista, fn [x, y] -> ponto_rotacao([x, y], angulo_em_radianos) end)
+    vertices_rotacionados = Enum.map(copiar_lista(lista), fn [x, y] -> ponto_rotacao([x, y], angulo_em_radianos) end)
 
     IO.puts("Rotação concluída")
     IO.inspect(vertices_rotacionados)
-    vertices_rotacionados
+    lista
   end
 
   def translacao(lista) do
@@ -52,10 +56,10 @@ defmodule Transformacoes do
     translacao_x = IO.gets("Digite a quantidade de translação para x: ") |> String.trim() |> String.to_integer()
     translacao_y = IO.gets("Digite a quantidade de translação para y: ") |> String.trim() |> String.to_integer()
 
-    nova_lista = Enum.map(lista, fn [x, y] -> [x + translacao_x, y + translacao_y] end)
+    nova_lista = Enum.map(copiar_lista(lista), fn [x, y] -> [x + translacao_x, y + translacao_y] end)
 
     IO.inspect(nova_lista)
-    nova_lista
+    lista
   end
 
   def reflexao(lista) do
@@ -68,14 +72,14 @@ defmodule Transformacoes do
 
     case opcao do
       1 ->
-        nova_lista = Enum.map(lista, fn [x, y] -> [x, -y] end)
+        nova_lista = Enum.map(copiar_lista(lista), fn [x, y] -> [x, -y] end)
         IO.inspect(nova_lista)
-        nova_lista
+        lista
 
       2 ->
-        nova_lista = Enum.map(lista, fn [x, y] -> [-x, y] end)
+        nova_lista = Enum.map(copiar_lista(lista), fn [x, y] -> [-x, y] end)
         IO.inspect(nova_lista)
-        nova_lista
+        lista
 
       _ ->
         IO.puts("Opção inválida.")
@@ -94,10 +98,10 @@ defmodule Transformacoes do
     sx = String.to_float(sx_str)
     sy = String.to_float(sy_str)
 
-    nova_lista = Enum.map(lista, fn [x, y] -> [x * sx, y * sy] end)
+    nova_lista = Enum.map(copiar_lista(lista), fn [x, y] -> [x * sx, y * sy] end)
     IO.puts("Escala aplicada com sucesso.")
     IO.inspect(nova_lista)
-    nova_lista
+    lista
   end
 
   def principal(lista) do
@@ -113,6 +117,7 @@ defmodule Transformacoes do
       4 -> principal(reflexao(lista))
       5 -> principal(escala(lista))
       6 -> IO.puts("Até logo")
+           lista
       _ -> IO.puts("Opção inválida")
            principal(lista)
     end
