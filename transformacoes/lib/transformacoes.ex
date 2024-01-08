@@ -48,7 +48,7 @@ defmodule Transformacoes do
 
     IO.puts("Rotação concluída")
     IO.inspect(vertices_rotacionados)
-    lista
+    vertices_rotacionados
   end
 
   def translacao(lista) do
@@ -72,14 +72,14 @@ defmodule Transformacoes do
 
     case opcao do
       1 ->
-        nova_lista = Enum.map(copiar_lista(lista), fn [x, y] -> [x, -y] end)
-        IO.inspect(nova_lista)
-        lista
-
-      2 ->
         nova_lista = Enum.map(copiar_lista(lista), fn [x, y] -> [-x, y] end)
         IO.inspect(nova_lista)
-        lista
+        nova_lista
+
+      2 ->
+        nova_lista = Enum.map(copiar_lista(lista), fn [x, y] -> [x, -y] end)
+        IO.inspect(nova_lista)
+        nova_lista
 
       _ ->
         IO.puts("Opção inválida.")
