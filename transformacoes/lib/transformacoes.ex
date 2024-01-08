@@ -44,7 +44,12 @@ defmodule Transformacoes do
     IO.inspect(lista)
     angulo = IO.gets("Digite o ângulo em graus:") |> String.trim() |> String.to_integer()
     angulo_em_radianos = angulo * :math.pi / 180
-    vertices_rotacionados = Enum.map(copiar_lista(lista), fn [x, y] -> ponto_rotacao([x, y], angulo_em_radianos) end)
+    
+    tarefas = Enum.map(copiar_lista(lista), fn [x, y] ->
+      Task.async(fn -> ponto_rotacao([x, y], angulo_em_radianos) end)
+    end)
+
+    vertices_rotacionados = Enum.map(tarefas, &Task.await/1)
 
     IO.puts("Rotação concluída")
     IO.inspect(vertices_rotacionados)
@@ -56,10 +61,13 @@ defmodule Transformacoes do
     translacao_x = IO.gets("Digite a quantidade de translação para x: ") |> String.trim() |> String.to_integer()
     translacao_y = IO.gets("Digite a quantidade de translação para y: ") |> String.trim() |> String.to_integer()
 
-    nova_lista = Enum.map(copiar_lista(lista), fn [x, y] -> [x + translacao_x, y + translacao_y] end)
+    tarefas = Enum.map(copiar_lista(lista), fn [x, y] ->
+      Task.async(fn -> [x + translacao_x, y + translacao_y] end)
+    end)
 
+    nova_lista = Enum.map(tarefas, &Task.await/1)
     IO.inspect(nova_lista)
-    lista
+    nova_lista
   end
 
   def reflexao(lista) do
@@ -70,22 +78,22 @@ defmodule Transformacoes do
 
     opcao = IO.gets(" |> ") |> String.trim() |> String.to_integer()
 
-    case opcao do
-      1 ->
-        nova_lista = Enum.map(copiar_lista(lista), fn [x, y] -> [-x, y] end)
-        IO.inspect(nova_lista)
-        nova_lista
+    tarefas =
+      case opcao do
+        1 ->
+          Enum.map(copiar_lista(lista), fn [x, y] -> Task.async(fn -> [x, -y] end) end)
 
-      2 ->
-        nova_lista = Enum.map(copiar_lista(lista), fn [x, y] -> [x, -y] end)
-        IO.inspect(nova_lista)
-        nova_lista
+        2 ->
+          Enum.map(copiar_lista(lista), fn [x, y] -> Task.async(fn -> [-x, y] end) end)
 
-      _ ->
-        IO.puts("Opção inválida.")
-        IO.inspect(lista)
-        lista
-    end
+        _ ->
+          IO.puts("Opção inválida.")
+          Enum.map(copiar_lista(lista), &Task.async(fn -> &1 end))
+      end
+
+    nova_lista = Enum.map(tarefas, &Task.await/1)
+    IO.inspect(nova_lista)
+    nova_lista
   end
 
   def escala(lista) do
@@ -98,10 +106,14 @@ defmodule Transformacoes do
     sx = String.to_float(sx_str)
     sy = String.to_float(sy_str)
 
-    nova_lista = Enum.map(copiar_lista(lista), fn [x, y] -> [x * sx, y * sy] end)
+    tarefas = Enum.map(copiar_lista(lista), fn [x, y] ->
+      Task.async(fn -> [x * sx, y * sy] end)
+    end)
+
+    nova_lista = Enum.map(tarefas, &Task.await/1)
     IO.puts("Escala aplicada com sucesso.")
     IO.inspect(nova_lista)
-    lista
+    nova_lista
   end
 
   def principal(lista) do
